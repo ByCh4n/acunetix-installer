@@ -1,3 +1,6 @@
+
+![logo](https://github.com/user-attachments/assets/89abd73f-f2cc-4173-b3b3-b4ff6e83a75a)
+
 # Acunetix Kurulum Scripti
 
 Bu script, **Acunetix v25.1** sürümünü Linux sistemlere otomatik olarak kurmak ve yapılandırmak için hazırlanmıştır. Bağımlılık kurulumundan lisans yamalamaya, `/etc/hosts` düzenlemesinden geçici dosya temizliğine kadar tüm süreci yönetir.
