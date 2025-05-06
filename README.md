@@ -13,7 +13,7 @@ Bu script, Acunetix v25.1 sürümünü otomatik olarak indirip kurar, gerekli ya
 ## 🚀 Kurulum
 
 ```bash
-git clone https://github.com/kullanici_adi/acunetix-installer.git
+git clone https://github.com/ByCh4n/acunetix-installer.git
 cd acunetix-installer
-chmod +x install.sh
+chmod +777 install.sh
 sudo ./install.sh
