@@ -3,8 +3,6 @@
 # ByCh4n | Cyber Security Expert
 # https://github.com/ByCh4n/acunetix-installer
 
-set -e # Hata durumunda scriptin durmasını sağlar
-
 # Renkli çıktı fonksiyonları
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -34,9 +32,9 @@ check_root() {
 # Bağımlılık kurulumu
 install_dependencies() {
     info "Gerekli bağımlılıklar kuruluyor..."
-    apt-get update >/dev/null 2>&1
-    apt-get install -y sudo p7zip-full libxcomposite1 libcups2 libasound2 \
-        libpango1.0-0 libatk1.0-0 libgbm1 libxfixes3 libcairo2 libxrandr2 \
+    apt update >/dev/null 2>&1
+    apt install -y sudo p7zip-full libxcomposite1 libcups2 libasound2 \
+        libatk1.0-0 libgbm1 libxfixes3 libcairo2 libxrandr2 \
         libxkbcommon0 libatk-bridge2.0-0 libxdamage1 libatspi2.0-0 >/dev/null 2>&1
     
     if [ $? -eq 0 ]; then
