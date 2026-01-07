@@ -1,5 +1,4 @@
-
-![logo](https://github.com/user-attachments/assets/89abd73f-f2cc-4173-b3b3-b4ff6e83a75a)
+<img width="1280" height="400" alt="2" src="https://github.com/user-attachments/assets/ef9cdbc9-41a9-4a85-8608-977972527692" />
 
 # Acunetix Kurulum Scripti
 
