@@ -25,6 +25,7 @@ cd acunetix-installer
 chmod +777 install.sh
 sudo ./install.sh
 ```
+<img width="1604" height="614" alt="image" src="https://github.com/user-attachments/assets/d283d304-27dc-4837-90dd-46c27fae8ca0" />
 
 --------------------------------------------------------------
 
