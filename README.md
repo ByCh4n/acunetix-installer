@@ -15,6 +15,9 @@ Bu script, **Acunetix v25.1** sürümünü Linux sistemlere otomatik olarak kurm
 - Kurulum sonrası geçici dosyaların otomatik temizlenmesi
 - Renkli terminal çıktıları ile kullanıcı dostu arayüz
 
+<img width="1373" height="725" alt="image" src="https://github.com/user-attachments/assets/a4e63bae-45cf-4492-bb44-76cac2686852" />
+
+
 ## 🚀 Kurulum
 
 Aşağıdaki komutları sırayla çalıştırarak kurulumu başlatabilirsiniz:
