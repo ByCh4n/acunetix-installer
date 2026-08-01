@@ -1,57 +1,73 @@
-<img width="1280" height="400" alt="2" src="https://github.com/user-attachments/assets/ef9cdbc9-41a9-4a85-8608-977972527692" />
+<p align="center">
+  <img width="1280" alt="acunetix-installer" src="https://github.com/user-attachments/assets/ef9cdbc9-41a9-4a85-8608-977972527692" />
+</p>
 
-# Acunetix Kurulum Scripti
+<h1 align="center">Acunetix Installer</h1>
 
-Bu script, **Acunetix v25.1** sürümünü Linux sistemlere otomatik olarak kurmak ve yapılandırmak için hazırlanmıştır. Bağımlılık kurulumundan lisans yamalamaya, `/etc/hosts` düzenlemesinden geçici dosya temizliğine kadar tüm süreci yönetir.
+<p align="center">
+  <img src="https://github.com/ByCh4n/acunetix-installer/actions/workflows/shellcheck.yml/badge.svg" alt="ShellCheck" />
+  <img src="https://img.shields.io/github/license/ByCh4n/acunetix-installer" alt="License" />
+  <img src="https://img.shields.io/github/stars/ByCh4n/acunetix-installer?style=social" alt="Stars" />
+</p>
 
-## 🛠 Özellikler
+A fully automated Bash script that installs and configures **Acunetix v25.1** on
+Linux systems. It handles dependency installation, `/etc/hosts` telemetry
+blocking, licensing, and cleanup — driven entirely from a single script.
 
-- Gerekli tüm bağımlılıkların kurulumu
-- Acunetix arşivinin otomatik indirilmesi ve çıkarılması
-- Telemetri ve izleme sunucularının `/etc/hosts` dosyası üzerinden engellenmesi
-- Orijinal `wvsc` tarama dosyasının değiştirilmesi
-- Lisans dosyalarının uygun izinlerle yerleştirilmesi
-- Kurulum sonrası geçici dosyaların otomatik temizlenmesi
-- Renkli terminal çıktıları ile kullanıcı dostu arayüz
+## Features
 
-<img width="1024" height="541" alt="image" src="https://github.com/user-attachments/assets/db5ed141-1228-472c-89fc-c309479cb66c" />
+- Installs all required dependencies, with automatic fallback to the Debian 13 /
+  Ubuntu 24.04 `t64` library variants
+- Downloads and extracts Acunetix automatically
+- Updates `/etc/hosts` to block telemetry and tracking endpoints (IPv4 + IPv6)
+- Places license files with the correct permissions and immutable attributes
+- Cleans up installation artifacts on exit
+- Single-point version configuration (`BUILD` / `VERSION_SHORT` variables)
+- Colored, readable terminal output
 
+## Requirements
 
-## 🚀 Kurulum
+- A Debian-based distribution (Debian / Ubuntu / Kali)
+- Root privileges (`sudo`)
+- `wget`, `7za` (installed automatically via `p7zip-full`)
+- An active internet connection
 
-Aşağıdaki komutları sırayla çalıştırarak kurulumu başlatabilirsiniz:
-
-```bash
-git clone https://github.com/ByCh4n/acunetix-installer.git
-cd acunetix-installer
-chmod +777 install.sh
-sudo ./install.sh
-```
-<img width="1024" height="390" alt="image" src="https://github.com/user-attachments/assets/18b63bc8-8257-4390-a8f9-2ee83cef9b1c" />
-
---------------------------------------------------------------
-
-# Acunetix Installer Script
-
-A fully automated Bash script that installs and configures **Acunetix v25.1** on Linux systems. It handles dependency installation, host blocking for telemetry, license patching, and cleanup.
-
-## 🛠 Features
-
-- Installs all required dependencies
-- Automatically downloads and extracts Acunetix
-- Updates `/etc/hosts` to block telemetry and tracking
-- Replaces original `wvsc` scanner binary
-- Patches license files with proper permissions and attributes
-- Cleans up installation artifacts after setup
-- Colored terminal output for better readability
-
-## 🚀 Installation
-
-Clone the repository and run the script:
+## Installation
 
 ```bash
 git clone https://github.com/ByCh4n/acunetix-installer.git
 cd acunetix-installer
-chmod +777 install.sh
+chmod +x install.sh
 sudo ./install.sh
 ```
+
+Once finished, open `https://localhost:3443` in your browser.
+
+## Usage
+
+| Flag | Description |
+|------|-------------|
+| _(none)_ | Run the full installation flow |
+| `-h`, `--help` | Show the help message |
+| `-v`, `--version` | Show the targeted Acunetix version |
+
+To target a different Acunetix build, edit the `BUILD` and `VERSION_SHORT`
+variables at the top of `install.sh`; every path is derived from them.
+
+## Disclaimer
+
+This script is provided for **authorized, educational, and lab use only**. You
+are responsible for complying with Acunetix's licensing terms and all applicable
+laws in your jurisdiction. The author accepts no liability for misuse.
+
+## Author
+
+**Hüseyin Altıntaş — ByCh4n**
+
+- GitHub: [@ByCh4n](https://github.com/ByCh4n)
+- LinkedIn: [huseyinaltns](https://www.linkedin.com/in/huseyinaltns/)
+- X: [@huseyinaltns](https://x.com/huseyinaltns)
+
+## License
+
+Licensed under the [MIT](LICENSE) license.
