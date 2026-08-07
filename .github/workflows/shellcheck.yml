@@ -57,4 +57,8 @@ jobs:
         run: |
           cp /etc/hosts /tmp/hosts.before
           bash install.sh --dry-run
-          diff /etc/hosts /tmp/hosts.before
+          # Compare with cat, not diff: the arch base image has no diffutils
+          # and the bootstrap only installs bash + coreutils.
+          if [ "$(cat /etc/hosts)" != "$(cat /tmp/hosts.before)" ]; then
+            echo "ERROR: --dry-run modified /etc/hosts"; exit 1
+          fi
