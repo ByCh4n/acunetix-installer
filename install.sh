@@ -33,9 +33,6 @@ readonly MIN_FREE_MIB="3072"
 
 readonly LOG_FILE="${PWD}/install.log"
 
-# Set by --dry-run: report the plan without changing anything.
-DRY_RUN=0
-
 # Markers delimiting the block this script owns in /etc/hosts. The whole
 # block is rewritten on every run, which keeps the file idempotent.
 readonly HOSTS_MARK_BEGIN="# >>> acunetix-installer (ByCh4n) >>>"
@@ -259,8 +256,12 @@ check_platform() {
 
     info "Detected: ${DISTRO_NAME} - ${arch}, ${PKG_MANAGER}"
 
+    # Acunetix ships a systemd unit, so systemd is required to actually install.
+    # It is only a warning here so the non-destructive --check / --dry-run paths
+    # still work inside minimal containers; the install flow enforces it via
+    # require_cmd systemctl before it does anything.
     command -v systemctl >/dev/null 2>&1 || \
-        error "systemd is required ('systemctl' not found)."
+        warning "systemd not found ('systemctl') - required for a real install."
 
     if [ "$PKG_MANAGER" != "apt" ]; then
         warning "This script is adapted for ${PKG_MANAGER}, but the upstream payload is not."
