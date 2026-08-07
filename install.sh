@@ -124,18 +124,25 @@ port_state() {
     fi
 }
 
-# Resource preflight. Warnings only for the advisory checks; a hard failure
-# only when there is clearly not enough disk to proceed.
+# Resource preflight. The port and df-availability checks are always advisory.
+# Low disk is only fatal when called with "strict" (the real install flow);
+# --check / --dry-run pass the default and merely warn, since they install
+# nothing and often run in containers whose overlay reports little free space.
 check_resources() {
+    local enforce="${1:-warn}"
     info "Checking resources..."
 
     local free
     free="$(avail_mib "$ACUNETIX_HOME")"
     if [ -n "$free" ]; then
         if [ "$free" -lt "$MIN_FREE_MIB" ]; then
-            error "Not enough free space for ${ACUNETIX_HOME%/*/*}: ${free} MiB available, ${MIN_FREE_MIB} MiB needed."
+            if [ "$enforce" = "strict" ]; then
+                error "Not enough free space for ${ACUNETIX_HOME%/*/*}: ${free} MiB available, ${MIN_FREE_MIB} MiB needed."
+            fi
+            warning "Low free space: ${free} MiB (< ${MIN_FREE_MIB} MiB recommended)."
+        else
+            success "Free space: ${free} MiB (>= ${MIN_FREE_MIB} MiB)."
         fi
-        success "Free space: ${free} MiB (>= ${MIN_FREE_MIB} MiB)."
     else
         warning "Could not determine free space (df unavailable?)."
     fi
@@ -613,7 +620,7 @@ main() {
 
     require_root
     check_platform
-    check_resources
+    check_resources strict
     banner
 
     trap cleanup_tmp EXIT
