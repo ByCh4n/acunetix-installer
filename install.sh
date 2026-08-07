@@ -103,12 +103,17 @@ EOF
 
 # Free space (MiB) on the filesystem that will hold the given path, walking up
 # to the nearest existing ancestor since /home/acunetix may not exist yet.
+# Runs the pipeline with pipefail disabled and always returns success: in some
+# containers df exits non-zero (e.g. an unreadable mount) even while printing a
+# valid line, which under 'set -Eeuo pipefail' would otherwise abort the caller.
 avail_mib() {
-    local path="$1"
+    local path="$1" out=""
     while [ ! -d "$path" ] && [ "$path" != "/" ]; do
         path="$(dirname "$path")"
     done
-    df -Pm "$path" 2>/dev/null | awk 'NR==2 {print $4}'
+    out="$(set +o pipefail; df -Pm "$path" 2>/dev/null | awk 'NR==2 {print $4}')"
+    printf '%s' "$out"
+    return 0
 }
 
 # Is the access port already taken? Best effort: needs ss or netstat, and is
@@ -134,18 +139,21 @@ check_resources() {
 
     local free
     free="$(avail_mib "$ACUNETIX_HOME")"
-    if [ -n "$free" ]; then
-        if [ "$free" -lt "$MIN_FREE_MIB" ]; then
-            if [ "$enforce" = "strict" ]; then
-                error "Not enough free space for ${ACUNETIX_HOME%/*/*}: ${free} MiB available, ${MIN_FREE_MIB} MiB needed."
+    case "$free" in
+        ''|*[!0-9]*)
+            warning "Could not determine free space (df unavailable?)."
+            ;;
+        *)
+            if [ "$free" -lt "$MIN_FREE_MIB" ]; then
+                if [ "$enforce" = "strict" ]; then
+                    error "Not enough free space for ${ACUNETIX_HOME%/*/*}: ${free} MiB available, ${MIN_FREE_MIB} MiB needed."
+                fi
+                warning "Low free space: ${free} MiB (< ${MIN_FREE_MIB} MiB recommended)."
+            else
+                success "Free space: ${free} MiB (>= ${MIN_FREE_MIB} MiB)."
             fi
-            warning "Low free space: ${free} MiB (< ${MIN_FREE_MIB} MiB recommended)."
-        else
-            success "Free space: ${free} MiB (>= ${MIN_FREE_MIB} MiB)."
-        fi
-    else
-        warning "Could not determine free space (df unavailable?)."
-    fi
+            ;;
+    esac
 
     local state
     state="$(port_state "$ACCESS_PORT")"
