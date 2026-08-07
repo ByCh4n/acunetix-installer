@@ -1,4 +1,4 @@
-name: ShellCheck
+name: CI
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   shellcheck:
-    name: Shellcheck
+    name: ShellCheck
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,4 +16,45 @@ jobs:
         uses: ludeeus/action-shellcheck@2.0.0
         with:
           scandir: '.'
-          severity: error
+          severity: warning
+
+  # Parse the script and exercise the non-destructive flags on each supported
+  # distribution family, so a change that only works on the dev's machine is
+  # caught in CI.
+  smoke:
+    name: Smoke (${{ matrix.image }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        image:
+          - debian:12
+          - debian:13
+          - ubuntu:22.04
+          - ubuntu:24.04
+          - kalilinux/kali-rolling
+          - archlinux:latest
+    container:
+      image: ${{ matrix.image }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install bash (Arch images ship it, Debian minimal may not)
+        run: |
+          if command -v apt-get >/dev/null 2>&1; then
+            apt-get update -qq && apt-get install -y --no-install-recommends bash coreutils
+          elif command -v pacman >/dev/null 2>&1; then
+            pacman -Sy --noconfirm bash coreutils
+          fi
+
+      - name: Syntax check
+        run: bash -n install.sh
+
+      - name: --version
+        run: bash install.sh --version
+
+      - name: --dry-run (must not touch the system)
+        run: |
+          cp /etc/hosts /tmp/hosts.before
+          bash install.sh --dry-run
+          diff /etc/hosts /tmp/hosts.before
